@@ -32,11 +32,11 @@ public class AppConfig {
         // Carga variables de entorno
         loadEnv();
 
-        // MongoDB se inicializa en Paso 1.2
-        // MongoConfig.init(dotenv);
+        // Inicializa MongoDB Atlas
+        MongoConfig.init();
 
-        // Firebase se inicializa en Paso 1.3
-        // FirebaseConfig.init(dotenv);
+        // Inicializa Firebase Admin SDK
+        FirebaseConfig.init();
 
         logger.info("Configuración inicializada correctamente.");
     }

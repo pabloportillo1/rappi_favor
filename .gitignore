@@ -1,0 +1,27 @@
+# ─── Secretos — NUNCA subir al repositorio ────────────────────────────────────
+.env
+*.env
+firebase-credentials.json
+src/main/resources/firebase-credentials.json
+src/main/resources/*firebase-adminsdk*.json
+
+# ─── Maven build ──────────────────────────────────────────────────────────────
+target/
+*.class
+*.jar
+
+# ─── IDEs ─────────────────────────────────────────────────────────────────────
+.idea/
+*.iml
+.vscode/
+*.project
+*.classpath
+.settings/
+
+# ─── Sistema operativo ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/

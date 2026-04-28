@@ -1,6 +1,8 @@
 com/rappifavor/RappiFavorApplication.class
+com/rappifavor/config/MongoConfig.class
 com/rappifavor/config/package-info.class
 com/rappifavor/service/package-info.class
+com/rappifavor/config/FirebaseConfig.class
 com/rappifavor/config/AppConfig.class
 com/rappifavor/model/package-info.class
 com/rappifavor/repository/package-info.class
