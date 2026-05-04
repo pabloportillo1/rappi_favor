@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rappi Favor — Chat</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="chat-body">
+
+  <!-- Header del chat -->
+  <div class="chat-header">
+    <button class="back-btn" onclick="history.back()">←</button>
+    <div class="chat-info">
+      <h3>Chat del pedido</h3>
+      <p id="chat-sub">Conectando...</p>
+    </div>
+  </div>
+
+  <!-- Área de mensajes -->
+  <div class="chat-messages" id="chat-messages">
+    <div class="loading">Cargando chat...</div>
+  </div>
+
+  <!-- Input de mensaje -->
+  <div class="chat-input-area">
+    <textarea id="msg-input" placeholder="Escribe un mensaje..." rows="1"
+      onkeydown="onKeyDown(event)"></textarea>
+    <button class="btn-send" onclick="enviarMensaje()">➤</button>
+  </div>
+
+  <!-- Firebase SDKs (incluyendo Realtime DB) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/chat.js"></script>
+</body>
+</html>

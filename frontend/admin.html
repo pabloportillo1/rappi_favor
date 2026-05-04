@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rappi Favor — Panel Admin</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <span class="nav-brand">Rappi Favor</span>
+    <div class="nav-user">
+      <span id="user-nombre"></span>
+      <span class="badge-rol administrador">ADMIN</span>
+      <button class="btn-logout" onclick="logout()">Salir</button>
+    </div>
+  </nav>
+
+  <main class="main-content">
+
+    <div id="global-msg" class="msg hidden"></div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="mostrarTab('usuarios')">👥 Usuarios</button>
+      <button class="tab-btn"        onclick="mostrarTab('pedidos')">📦 Pedidos</button>
+      <button class="tab-btn"        onclick="mostrarTab('disputas')">⚠️ Disputas</button>
+    </div>
+
+    <!-- ── Tab: Usuarios ── -->
+    <div id="tab-usuarios" class="tab-content active">
+      <div class="page-header">
+        <h2>Usuarios</h2>
+        <button class="btn btn-secondary btn-sm" onclick="cargarUsuarios()">↻ Actualizar</button>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Registrado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-usuarios">
+            <tr><td colspan="6" class="loading">Cargando usuarios...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Tab: Pedidos ── -->
+    <div id="tab-pedidos" class="tab-content">
+      <div class="page-header">
+        <h2>Todos los Pedidos</h2>
+        <button class="btn btn-secondary btn-sm" onclick="cargarPedidos()">↻ Actualizar</button>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Descripción</th>
+              <th>Origen → Destino</th>
+              <th>Estado</th>
+              <th>Usuario</th>
+              <th>Creado</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-pedidos">
+            <tr><td colspan="6" class="loading">Cargando pedidos...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Tab: Disputas ── -->
+    <div id="tab-disputas" class="tab-content">
+      <div class="page-header">
+        <h2>Disputas Abiertas</h2>
+        <button class="btn btn-secondary btn-sm" onclick="cargarDisputas()">↻ Actualizar</button>
+      </div>
+      <div id="lista-disputas"><div class="loading">Cargando disputas...</div></div>
+    </div>
+
+  </main>
+
+  <!-- ── Modal: Cambiar rol ── -->
+  <div class="modal" id="modal-rol">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Cambiar Rol</h3>
+        <button class="modal-close" onclick="cerrarModal('modal-rol')">×</button>
+      </div>
+      <input type="hidden" id="rol-uid">
+      <div class="form-group">
+        <label>Nuevo rol</label>
+        <select id="nuevo-rol">
+          <option value="USUARIO">USUARIO</option>
+          <option value="REPARTIDOR">REPARTIDOR</option>
+          <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="confirmarCambioRol()">Guardar</button>
+    </div>
+  </div>
+
+  <!-- ── Modal: Resolver disputa ── -->
+  <div class="modal" id="modal-resolver">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Resolver Disputa</h3>
+        <button class="modal-close" onclick="cerrarModal('modal-resolver')">×</button>
+      </div>
+      <div id="resolver-msg" class="msg hidden"></div>
+      <input type="hidden" id="resolver-id">
+      <p id="resolver-motivo" style="font-size:14px;color:#7F8C8D;margin-bottom:16px;background:#F8F9FA;padding:12px;border-radius:8px;"></p>
+      <div class="form-group">
+        <label>Resolución del administrador</label>
+        <textarea id="resolver-texto" placeholder="Describe la resolución..." required></textarea>
+      </div>
+      <button class="btn btn-success btn-block" id="btn-resolver" onclick="confirmarResolucion()">
+        Resolver Disputa
+      </button>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

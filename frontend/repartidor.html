@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rappi Favor — Panel Repartidor</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <span class="nav-brand">Rappi Favor</span>
+    <div class="nav-user">
+      <span id="user-nombre"></span>
+      <span class="badge-rol repartidor">REPARTIDOR</span>
+      <button class="btn-logout" onclick="logout()">Salir</button>
+    </div>
+  </nav>
+
+  <main class="main-content">
+
+    <div id="global-msg" class="msg hidden"></div>
+
+    <!-- ── Pedidos disponibles ── -->
+    <div class="section">
+      <div class="page-header">
+        <h2>Pedidos Disponibles</h2>
+        <button class="btn btn-secondary btn-sm" onclick="cargarTodo()">↻ Actualizar</button>
+      </div>
+      <div id="lista-disponibles"><div class="loading">Cargando pedidos disponibles...</div></div>
+    </div>
+
+    <!-- ── Mis pedidos activos ── -->
+    <div class="section">
+      <h3 class="section-title">Mis Pedidos</h3>
+      <div id="lista-mios"><div class="loading">Cargando...</div></div>
+    </div>
+
+  </main>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/repartidor.js"></script>
+</body>
+</html>

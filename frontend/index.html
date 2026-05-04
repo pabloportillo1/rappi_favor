@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rappi Favor — Iniciar Sesión</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="auth-body">
+
+  <div class="auth-card">
+    <div class="auth-logo">
+      <h1>Rappi Favor</h1>
+      <p>Plataforma universitaria de favores · ITESO</p>
+    </div>
+
+    <!-- Tabs Login / Registrarse -->
+    <div class="auth-tabs">
+      <button class="auth-tab-btn active" onclick="showTab('login')">Iniciar Sesión</button>
+      <button class="auth-tab-btn"        onclick="showTab('register')">Registrarse</button>
+    </div>
+
+    <!-- Mensaje de error/éxito -->
+    <div id="auth-msg" class="msg hidden"></div>
+
+    <!-- ── Tab: Login ── -->
+    <div id="tab-login">
+      <form onsubmit="onLogin(event)">
+        <div class="form-group">
+          <label for="login-email">Correo institucional</label>
+          <input type="email" id="login-email" placeholder="usuario@iteso.mx" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Contraseña</label>
+          <input type="password" id="login-password" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="btn-login">
+          Iniciar Sesión
+        </button>
+      </form>
+    </div>
+
+    <!-- ── Tab: Registro ── -->
+    <div id="tab-register" class="hidden">
+      <form onsubmit="onRegister(event)">
+        <div class="form-group">
+          <label for="reg-nombre">Nombre completo</label>
+          <input type="text" id="reg-nombre" placeholder="Tu nombre" required>
+        </div>
+        <div class="form-group">
+          <label for="reg-email">Correo institucional (@iteso.mx)</label>
+          <input type="email" id="reg-email" placeholder="usuario@iteso.mx" required>
+        </div>
+        <div class="form-group">
+          <label for="reg-password">Contraseña</label>
+          <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres" required minlength="6">
+        </div>
+        <div class="form-group">
+          <label for="reg-confirm">Confirmar contraseña</label>
+          <input type="password" id="reg-confirm" placeholder="Repite tu contraseña" required>
+        </div>
+        <div class="form-group">
+          <label for="reg-rol">Rol</label>
+          <select id="reg-rol" required>
+            <option value="">— Selecciona tu rol —</option>
+            <option value="USUARIO">Usuario (solicito favores)</option>
+            <option value="REPARTIDOR">Repartidor (hago favores)</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="btn-register">
+          Crear Cuenta
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Si ya hay sesión activa, redirigir directo al dashboard
+    firebase.auth().onAuthStateChanged(async (user) => {
+      if (user) {
+        try { await redirigirPorRol(); } catch (e) { /* sin perfil aún */ }
+      }
+    });
+
+    function showTab(tab) {
+      document.getElementById('tab-login').classList.toggle('hidden', tab !== 'login');
+      document.getElementById('tab-register').classList.toggle('hidden', tab !== 'register');
+      document.querySelectorAll('.auth-tab-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+      });
+      hideMsg('auth-msg');
+    }
+
+    async function onLogin(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-login');
+      btn.disabled = true;
+      btn.textContent = 'Ingresando...';
+      hideMsg('auth-msg');
+
+      const email    = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      try {
+        await firebase.auth().signInWithEmailAndPassword(email, password);
+        await redirigirPorRol();
+      } catch (err) {
+        showError('auth-msg', traducirErrorFirebase(err.code) || err.message);
+        btn.disabled = false;
+        btn.textContent = 'Iniciar Sesión';
+      }
+    }
+
+    async function onRegister(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-register');
+      btn.disabled = true;
+      btn.textContent = 'Creando cuenta...';
+      hideMsg('auth-msg');
+
+      const nombre   = document.getElementById('reg-nombre').value.trim();
+      const email    = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-password').value;
+      const confirm  = document.getElementById('reg-confirm').value;
+      const rol      = document.getElementById('reg-rol').value;
+
+      if (password !== confirm) {
+        showError('auth-msg', 'Las contraseñas no coinciden.');
+        btn.disabled = false; btn.textContent = 'Crear Cuenta';
+        return;
+      }
+
+      try {
+        // 1. Crear usuario en Firebase Auth
+        const cred = await firebase.auth().createUserWithEmailAndPassword(email, password);
+        const user = cred.user;
+
+        // 2. Registrar perfil en el backend (token se toma del usuario recién creado)
+        await api.post('/api/users/register', { nombre, email, rol });
+
+        // 3. Redirigir al dashboard correspondiente
+        await redirigirPorRol();
+      } catch (err) {
+        // Si el registro en el backend falla, eliminar el usuario de Firebase
+        const user = firebase.auth().currentUser;
+        if (user) {
+          try { await user.delete(); } catch (_) {}
+        }
+        showError('auth-msg', err.message || traducirErrorFirebase(err.code));
+        btn.disabled = false; btn.textContent = 'Crear Cuenta';
+      }
+    }
+
+    function traducirErrorFirebase(code) {
+      const errores = {
+        'auth/user-not-found':       'No existe una cuenta con ese correo.',
+        'auth/wrong-password':       'Contraseña incorrecta.',
+        'auth/email-already-in-use': 'Ese correo ya tiene una cuenta.',
+        'auth/invalid-email':        'El correo no es válido.',
+        'auth/weak-password':        'La contraseña debe tener al menos 6 caracteres.',
+        'auth/too-many-requests':    'Demasiados intentos. Intenta más tarde.',
+        'auth/network-request-failed': 'Error de red. Verifica tu conexión.',
+      };
+      return errores[code] || null;
+    }
+  </script>
+</body>
+</html>

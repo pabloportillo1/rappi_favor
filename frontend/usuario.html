@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rappi Favor — Mi Panel</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <span class="nav-brand">Rappi Favor</span>
+    <div class="nav-user">
+      <span id="user-nombre"></span>
+      <span class="badge-rol usuario">USUARIO</span>
+      <button class="btn-logout" onclick="logout()">Salir</button>
+    </div>
+  </nav>
+
+  <main class="main-content">
+
+    <!-- Mensaje global -->
+    <div id="global-msg" class="msg hidden"></div>
+
+    <!-- ── Sección: Mis Pedidos ── -->
+    <div class="section">
+      <div class="page-header">
+        <h2>Mis Pedidos</h2>
+        <button class="btn btn-primary" onclick="abrirModalPedido()">+ Nuevo Pedido</button>
+      </div>
+      <div id="lista-pedidos"><div class="loading">Cargando pedidos...</div></div>
+    </div>
+
+    <!-- ── Sección: Mis Disputas ── -->
+    <div class="section">
+      <h3 class="section-title">Mis Disputas</h3>
+      <div id="lista-disputas"><div class="loading">Cargando disputas...</div></div>
+    </div>
+
+  </main>
+
+  <!-- ── Modal: Crear Pedido ── -->
+  <div class="modal" id="modal-pedido">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Nuevo Pedido</h3>
+        <button class="modal-close" onclick="cerrarModal('modal-pedido')">×</button>
+      </div>
+      <div id="pedido-msg" class="msg hidden"></div>
+      <form onsubmit="onCrearPedido(event)">
+        <div class="form-group">
+          <label>Descripción del favor</label>
+          <textarea id="p-descripcion" placeholder="¿Qué necesitas que te traigan o hagan?" required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Origen (¿dónde lo recogen?)</label>
+          <input type="text" id="p-origen" placeholder="Ej. Cafetería del edificio J" required>
+        </div>
+        <div class="form-group">
+          <label>Destino (¿dónde lo entregan?)</label>
+          <input type="text" id="p-destino" placeholder="Ej. Laboratorio L101" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="btn-crear-pedido">
+          Publicar Pedido
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Modal: Abrir Disputa ── -->
+  <div class="modal" id="modal-disputa">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Abrir Disputa</h3>
+        <button class="modal-close" onclick="cerrarModal('modal-disputa')">×</button>
+      </div>
+      <div id="disputa-msg" class="msg hidden"></div>
+      <p style="font-size:13px;color:#7F8C8D;margin-bottom:16px;">
+        Describe por qué no estás conforme con la entrega. Un administrador la revisará.
+      </p>
+      <input type="hidden" id="d-pedidoId">
+      <form onsubmit="onAbrirDisputa(event)">
+        <div class="form-group">
+          <label>Motivo de la disputa</label>
+          <textarea id="d-motivo" placeholder="Explica el problema..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-warning btn-block" id="btn-disputa">
+          Abrir Disputa
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/usuario.js"></script>
+</body>
+</html>
