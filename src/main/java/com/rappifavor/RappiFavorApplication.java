@@ -1,6 +1,19 @@
 package com.rappifavor;
 
 import com.rappifavor.config.AppConfig;
+import com.rappifavor.config.AuthFilter;
+import com.rappifavor.config.RoleFilter;
+import com.rappifavor.controller.ChatController;
+import com.rappifavor.controller.DisputeController;
+import com.rappifavor.controller.OrderController;
+import com.rappifavor.controller.UserController;
+import com.rappifavor.repository.DisputeRepository;
+import com.rappifavor.repository.OrderRepository;
+import com.rappifavor.repository.UserRepository;
+import com.rappifavor.service.ChatService;
+import com.rappifavor.service.DisputeService;
+import com.rappifavor.service.OrderService;
+import com.rappifavor.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,13 +79,35 @@ public class RappiFavorApplication {
             return "{\"status\":\"UP\",\"service\":\"Rappi Favor Backend\",\"version\":\"1.0.0\"}";
         });
 
-        // ─── 5. Rutas del API ─────────────────────────────────────────────
-        // Se registrarán en pasos futuros (Fase 5: Controllers).
-        // Por ahora se deja un placeholder comentado para referencia.
-        //
-        // Paso 5.1: UserController.register(app)
-        // Paso 5.2: OrderController.register(app)
-        // Paso 5.3: DisputeController.register(app)
+        // ─── 5. Grafo de dependencias: Repository → Service ──────────────
+        UserRepository    userRepo    = new UserRepository();
+        OrderRepository   orderRepo   = new OrderRepository();
+        DisputeRepository disputeRepo = new DisputeRepository();
+
+        UserService    userService    = new UserService(userRepo);
+        OrderService   orderService   = new OrderService(orderRepo);
+        DisputeService disputeService = new DisputeService(disputeRepo, orderService);
+        ChatService    chatService    = new ChatService(orderService);
+
+        // ─── 6. Filtros de seguridad (deben ir ANTES que los controllers) ─
+        // Paso 6.1: Verificación del token JWT de Firebase en todas las rutas /api/*
+        new AuthFilter().apply();
+
+        // Paso 6.2: Control de acceso por rol (ADMINISTRADOR, REPARTIDOR)
+        new RoleFilter(userService).apply();
+
+        // ─── 7. Rutas del API ─────────────────────────────────────────────
+        // Paso 5.1: Endpoints de usuarios
+        new UserController(userService).register();
+
+        // Paso 5.2: Endpoints de pedidos
+        new OrderController(orderService).register();
+
+        // Paso 5.3: Endpoints de disputas
+        new DisputeController(disputeService).register();
+
+        // Paso 7.2: Endpoint de chat
+        new ChatController(chatService).register();
 
         logger.info("Rappi Favor Backend iniciado correctamente en http://localhost:{}", port);
         logger.info("Health check disponible en: http://localhost:{}/health", port);

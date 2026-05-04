@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "chats": {
+      "$pedidoId": {
+        ".read": "auth != null && (data.child('usuarioId').val() === auth.uid || data.child('repartidorId').val() === auth.uid)",
+        "mensajes": {
+          ".write": "auth != null && (root.child('chats').child($pedidoId).child('usuarioId').val() === auth.uid || root.child('chats').child($pedidoId).child('repartidorId').val() === auth.uid)"
+        }
+      }
+    }
+  }
+}
