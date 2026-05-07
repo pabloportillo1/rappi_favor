@@ -27,7 +27,10 @@
     <div class="section">
       <div class="page-header">
         <h2>Mis Pedidos</h2>
-        <button class="btn btn-primary" onclick="abrirModalPedido()">+ Nuevo Pedido</button>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-secondary" onclick="actualizar(this)">↻ Actualizar</button>
+          <button class="btn btn-primary" onclick="abrirModalPedido()">+ Nuevo Pedido</button>
+        </div>
       </div>
       <div id="lista-pedidos"><div class="loading">Cargando pedidos...</div></div>
     </div>

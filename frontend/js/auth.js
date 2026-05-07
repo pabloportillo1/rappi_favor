@@ -25,6 +25,29 @@ function hideMsg(elementId) {
   if (el) el.classList.add('hidden');
 }
 
+// Modal de confirmación personalizado — reemplaza al confirm() del navegador
+function confirmar(titulo, mensaje, btnTexto = 'Confirmar', peligroso = true) {
+  return new Promise((resolve) => {
+    const id = 'modal-confirm-' + Date.now();
+    const div = document.createElement('div');
+    div.className = 'modal active';
+    div.id = id;
+    div.innerHTML = `
+      <div class="modal-content" style="max-width:400px;text-align:center;">
+        <div style="font-size:44px;margin-bottom:12px;">${peligroso ? '⚠️' : '✅'}</div>
+        <h3 style="margin-bottom:8px;font-size:18px;">${titulo}</h3>
+        <p style="color:#7F8C8D;margin-bottom:24px;font-size:14px;line-height:1.5;">${mensaje}</p>
+        <div style="display:flex;gap:12px;justify-content:center;">
+          <button class="btn btn-secondary" id="${id}-no">Cancelar</button>
+          <button class="btn ${peligroso ? 'btn-danger' : 'btn-success'}" id="${id}-si">${btnTexto}</button>
+        </div>
+      </div>`;
+    document.body.appendChild(div);
+    document.getElementById(`${id}-si`).onclick  = () => { div.remove(); resolve(true);  };
+    document.getElementById(`${id}-no`).onclick  = () => { div.remove(); resolve(false); };
+  });
+}
+
 // Obtiene el perfil del usuario del backend y lo guarda en sessionStorage
 async function cargarPerfil(uid) {
   const perfil = await api.get(`/api/users/${uid}`);

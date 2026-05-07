@@ -61,7 +61,13 @@ async function cargarUsuarios() {
 
 async function toggleActivo(uid, activar) {
   const accion = activar ? 'activar' : 'desactivar';
-  if (!confirm(`¿${activar ? 'Activar' : 'Desactivar'} este usuario?`)) return;
+  const ok = await confirmar(
+    `${activar ? 'Activar' : 'Desactivar'} usuario`,
+    `¿Confirmas que quieres ${activar ? 'activar' : 'desactivar'} esta cuenta?`,
+    activar ? 'Sí, activar' : 'Sí, desactivar',
+    !activar
+  );
+  if (!ok) return;
   try {
     await api.patch(`/api/users/${uid}/${accion}`);
     showSuccess('global-msg', `Usuario ${activar ? 'activado' : 'desactivado'} correctamente.`);

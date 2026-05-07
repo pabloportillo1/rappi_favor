@@ -12,17 +12,28 @@ protegerPagina('USUARIO', async (user, perfil) => {
 
 // ─── Pedidos ──────────────────────────────────────────────────
 
+function ocultos() {
+  return JSON.parse(localStorage.getItem('pedidos_ocultos') || '[]');
+}
+
+function ocultarPedido(id) {
+  const lista = ocultos();
+  if (!lista.includes(id)) lista.push(id);
+  localStorage.setItem('pedidos_ocultos', JSON.stringify(lista));
+  cargarPedidos();
+}
+
 async function cargarPedidos() {
   const contenedor = document.getElementById('lista-pedidos');
   try {
     const pedidos = await api.get(`/api/orders?usuarioId=${_uid}`);
-    if (!pedidos.length) {
+    const visibles = pedidos.filter(p => !ocultos().includes(p.id));
+    if (!visibles.length) {
       contenedor.innerHTML = `<div class="empty-state"><p>Aún no tienes pedidos. ¡Crea uno!</p></div>`;
       return;
     }
-    // Más recientes primero
-    pedidos.sort((a, b) => new Date(b.creadoEn) - new Date(a.creadoEn));
-    contenedor.innerHTML = pedidos.map(renderPedido).join('');
+    visibles.sort((a, b) => new Date(b.creadoEn) - new Date(a.creadoEn));
+    contenedor.innerHTML = visibles.map(renderPedido).join('');
   } catch (e) {
     contenedor.innerHTML = `<div class="msg msg-error">${e.message}</div>`;
   }
@@ -35,9 +46,10 @@ function renderPedido(p) {
   };
   const borde = estadoColor[p.estado] || '#E0E0E0';
 
-  const puedeChat    = ['ASIGNADO','EN_CAMINO','ENTREGADO','DISPUTADO'].includes(p.estado);
+  const puedeChat     = ['ASIGNADO','EN_CAMINO','ENTREGADO','DISPUTADO'].includes(p.estado);
   const puedeCancelar = ['PENDIENTE','ASIGNADO'].includes(p.estado);
   const puedeDisputar = p.estado === 'ENTREGADO';
+  const puedeOcultar  = ['CANCELADO','ENTREGADO','RESUELTO'].includes(p.estado);
 
   const historialHTML = p.historial && p.historial.length
     ? `<div class="historial">
@@ -63,11 +75,20 @@ function renderPedido(p) {
       </div>
       ${historialHTML}
       <div class="card-actions">
-        ${puedeChat    ? `<button class="btn btn-info btn-sm"    onclick="irChat('${p.id}')">💬 Chat</button>` : ''}
-        ${puedeDisputar? `<button class="btn btn-warning btn-sm" onclick="abrirModalDisputa('${p.id}')">⚠️ Disputar</button>` : ''}
-        ${puedeCancelar? `<button class="btn btn-danger btn-sm"  onclick="cancelarPedido('${p.id}')">✕ Cancelar</button>` : ''}
+        ${puedeChat     ? `<button class="btn btn-info btn-sm"    onclick="irChat('${p.id}')">💬 Chat</button>` : ''}
+        ${puedeDisputar ? `<button class="btn btn-warning btn-sm" onclick="abrirModalDisputa('${p.id}')">⚠️ Disputar</button>` : ''}
+        ${puedeCancelar ? `<button class="btn btn-danger btn-sm"  onclick="cancelarPedido('${p.id}')">✕ Cancelar</button>` : ''}
+        ${puedeOcultar  ? `<button class="btn btn-secondary btn-sm" onclick="ocultarPedido('${p.id}')" style="margin-left:auto;" title="Quitar de la lista">✕ Quitar</button>` : ''}
       </div>
     </div>`;
+}
+
+async function actualizar(btn) {
+  btn.disabled = true;
+  btn.textContent = '↻ Actualizando...';
+  await Promise.all([cargarPedidos(), cargarDisputas()]);
+  btn.disabled = false;
+  btn.textContent = '↻ Actualizar';
 }
 
 async function onCrearPedido(e) {
@@ -94,7 +115,12 @@ async function onCrearPedido(e) {
 }
 
 async function cancelarPedido(pedidoId) {
-  if (!confirm('¿Seguro que quieres cancelar este pedido?')) return;
+  const ok = await confirmar(
+    'Cancelar pedido',
+    '¿Seguro que quieres cancelar este pedido? Esta acción no se puede deshacer.',
+    'Sí, cancelar'
+  );
+  if (!ok) return;
   try {
     await api.patch(`/api/orders/${pedidoId}/cancelar`, { usuarioId: _uid });
     showSuccess('global-msg', 'Pedido cancelado.');
@@ -106,15 +132,27 @@ async function cancelarPedido(pedidoId) {
 
 // ─── Disputas ─────────────────────────────────────────────────
 
+function ocultosDis() {
+  return JSON.parse(localStorage.getItem('disputas_ocultas') || '[]');
+}
+
+function ocultarDisputa(id) {
+  const lista = ocultosDis();
+  if (!lista.includes(id)) lista.push(id);
+  localStorage.setItem('disputas_ocultas', JSON.stringify(lista));
+  cargarDisputas();
+}
+
 async function cargarDisputas() {
   const contenedor = document.getElementById('lista-disputas');
   try {
     const disputas = await api.get(`/api/disputes/usuario/${_uid}`);
-    if (!disputas.length) {
+    const visibles = disputas.filter(d => !ocultosDis().includes(d.id));
+    if (!visibles.length) {
       contenedor.innerHTML = `<div class="empty-state"><p>No tienes disputas abiertas.</p></div>`;
       return;
     }
-    contenedor.innerHTML = disputas.map(renderDisputa).join('');
+    contenedor.innerHTML = visibles.map(renderDisputa).join('');
   } catch (e) {
     contenedor.innerHTML = `<div class="msg msg-error">${e.message}</div>`;
   }
@@ -137,6 +175,10 @@ function renderDisputa(d) {
         <span>Abierta: ${formatFecha(d.creadoEn)}</span>
         ${d.resoltoEn ? `<span>Resuelta: ${formatFecha(d.resoltoEn)}</span>` : ''}
       </div>
+      ${d.estado === 'RESUELTO' ? `
+      <div class="card-actions">
+        <button class="btn btn-secondary btn-sm" onclick="ocultarDisputa('${d.id}')" style="margin-left:auto;" title="Quitar de la lista">✕ Quitar</button>
+      </div>` : ''}
     </div>`;
 }
 

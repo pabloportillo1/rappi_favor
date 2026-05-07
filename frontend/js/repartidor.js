@@ -127,7 +127,13 @@ async function iniciarEntrega(pedidoId) {
 }
 
 async function confirmarEntrega(pedidoId) {
-  if (!confirm('¿Confirmas que el pedido fue entregado?')) return;
+  const ok = await confirmar(
+    'Confirmar entrega',
+    '¿El pedido fue entregado correctamente al usuario?',
+    'Sí, confirmar',
+    false
+  );
+  if (!ok) return;
   try {
     await api.patch(`/api/orders/${pedidoId}/entregar`, { repartidorId: _uid });
     showSuccess('global-msg', '¡Entrega confirmada! Buen trabajo.');
