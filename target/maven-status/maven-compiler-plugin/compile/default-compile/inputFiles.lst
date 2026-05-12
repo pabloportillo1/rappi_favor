@@ -1,9 +1,28 @@
-/Users/pabloportillo/Desktop/Semestre6/ARQUITECTURA DE SOFTWARE/rappi_favor/src/main/java/com/rappifavor/service/package-info.java
-/Users/pabloportillo/Desktop/Semestre6/ARQUITECTURA DE SOFTWARE/rappi_favor/src/main/java/com/rappifavor/config/AppConfig.java
-/Users/pabloportillo/Desktop/Semestre6/ARQUITECTURA DE SOFTWARE/rappi_favor/src/main/java/com/rappifavor/config/package-info.java
-/Users/pabloportillo/Desktop/Semestre6/ARQUITECTURA DE SOFTWARE/rappi_favor/src/main/java/com/rappifavor/controller/package-info.java
-/Users/pabloportillo/Desktop/Semestre6/ARQUITECTURA DE SOFTWARE/rappi_favor/src/main/java/com/rappifavor/config/MongoConfig.java
-/Users/pabloportillo/Desktop/Semestre6/ARQUITECTURA DE SOFTWARE/rappi_favor/src/main/java/com/rappifavor/RappiFavorApplication.java
-/Users/pabloportillo/Desktop/Semestre6/ARQUITECTURA DE SOFTWARE/rappi_favor/src/main/java/com/rappifavor/config/FirebaseConfig.java
-/Users/pabloportillo/Desktop/Semestre6/ARQUITECTURA DE SOFTWARE/rappi_favor/src/main/java/com/rappifavor/model/package-info.java
-/Users/pabloportillo/Desktop/Semestre6/ARQUITECTURA DE SOFTWARE/rappi_favor/src/main/java/com/rappifavor/repository/package-info.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\model\Disputa.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\controller\package-info.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\model\HistorialEstado.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\config\FirebaseConfig.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\service\OrderService.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\config\AppConfig.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\config\RoleFilter.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\controller\DisputeController.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\model\package-info.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\config\AuthFilter.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\controller\OrderController.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\RappiFavorApplication.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\repository\UserRepository.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\config\MongoConfig.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\service\UserService.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\repository\OrderRepository.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\model\Pedido.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\service\DisputeService.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\repository\package-info.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\controller\UserController.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\model\Usuario.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\service\ChatService.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\service\package-info.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\model\EstadoPedido.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\config\package-info.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\repository\DisputeRepository.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\controller\ChatController.java
+C:\Users\juanpa\Documents\arquitectura\proyecto\rappi_favor\src\main\java\com\rappifavor\model\RolUsuario.java
